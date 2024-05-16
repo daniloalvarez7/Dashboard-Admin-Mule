@@ -28,40 +28,65 @@ export default function LoginPage() {
   });
   const navigate = useNavigate();
 
+  // const handleSubmit = async (e) => {
+  //   let errors = {};
+  //   e.preventDefault();
+  //   //Validacion
+  //   if (!inputs.username || !inputs.password) {
+  //     errors.username = "All fields are required";
+  //   } else if (
+  //     !/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,80}$/.test(
+  //       inputs.password
+  //     )
+  //   ) {
+  //     errors.password =
+  //       "The password must contain at least one number and one special character, and six characters at least";
+  //   } else {
+  //     //Comprobar usuario y contraseña en BD
+  //     setLoading(true);
+  //     await axios
+  //       .post(`${VITE_BACKEND_URL}/auth/login`, {
+  //         usernameOrEmail: inputs.username.toLocaleLowerCase(),
+  //         password: inputs.password,
+  //       })
+  //       .then((response) => {
+  //         if (!Cookies.get("token"))
+  //           Cookies.set("token", response.data.token, { expires: 1 / 24 });
+  //         navigate("/dashboard/home");
+  //       })
+  //       .catch(async (err) => {
+  //         if (err.response?.status === 401)
+  //           await failAlert(undefined, err.response.data.message, undefined);
+  //         else await failAlert(undefined, "Internal Server Error!", undefined);
+  //       })
+  //       .finally(setLoading(false));
+  //   }
+  //   setError(errors);
+  // };
+
   const handleSubmit = async (e) => {
-    let errors = {};
     e.preventDefault();
-    //Validacion
+    let errors = {};
+    
+    // Validación
     if (!inputs.username || !inputs.password) {
       errors.username = "All fields are required";
     } else if (
-      !/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,80}$/.test(
-        inputs.password
-      )
+      inputs.username !== "admin" ||
+      inputs.password !== "Mule1234*"
     ) {
-      errors.password =
-        "The password must contain at least one number and one special character, and six characters at least";
+      errors.password = "Invalid username or password";
     } else {
-      //Comprobar usuario y contraseña en BD
+      // Usuario y contraseña correctos
       setLoading(true);
-      await axios
-        .post(`${VITE_BACKEND_URL}/auth/login`, {
-          usernameOrEmail: inputs.username.toLocaleLowerCase(),
-          password: inputs.password,
-        })
-        .then((response) => {
-          if (!Cookies.get("token"))
-            Cookies.set("token", response.data.token, { expires: 1 / 24 });
-          navigate("/dashboard/home");
-        })
-        .catch(async (err) => {
-          if (err.response?.status === 401)
-            await failAlert(undefined, err.response.data.message, undefined);
-          else await failAlert(undefined, "Internal Server Error!", undefined);
-        })
-        .finally(setLoading(false));
+      // Simulación de token JWT válido
+      const fakeToken = "yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQzYTU5NmRiLWQ2YzktNDA5ZC04ZmU2LWZkNmY2YzE4NzZlOCIsInVzZXJuYW1lIjoiYXZlbmdvZWMiLCJlbWFpbCI6Imdpb3Zhbm5hMDQxMjk4QGdtYWlsLmNvbSIsInJvbGUiOiJlbXBsb3llZSIsImlhdCI6MTcxNTgxOTMxMywiZXhwIjoxNzE1OTA1NzEzfQ.j-mkGZMzDLWyFDBwZJQn0CJ1EhGDePjlRIMkwjxxTmc";
+      Cookies.set("token", fakeToken, { expires: 1 / 24 });
+      navigate("/dashboard/home");
     }
+    
     setError(errors);
+    setLoading(false);
   };
 
   const handleChange = (e) => {
